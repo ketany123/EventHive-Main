@@ -5,7 +5,6 @@ import com.EventHive.dto.ApiResponseDto;
 import com.EventHive.dto.PagedApiResponseDto;
 import com.EventHive.dto.ReservationRequestDto;
 import com.EventHive.entity.Reservation;
-import com.EventHive.repository.ReservationRepository;
 import com.EventHive.service.QrCodeService;
 import com.EventHive.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,15 +55,18 @@ public class ReservationController {
         return null;
     }
 
+    // user(John) register they get Referrel code user send his refferel code (after registering)  to his friends
+    // friend uses his refferel code for registering , both will get coupon(discount, cashback) for some limited time
+
+    // promo code -  if user books ticket frequently like 10 per month
+    // then he will get promo code (discount, cashback, buy 1 get1 ) created by superadmin
+
     @PostMapping("/reserve")
     public ResponseEntity<ApiResponseDto> createReservation(
             @RequestBody ReservationRequestDto reservationRequestDto
     )throws  Exception{
         String currentUserName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Reservation reservation = reservationService.createReservation(reservationRequestDto, currentUserName);
-
-
-
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -98,8 +100,6 @@ public class ReservationController {
         String qrCodeData = qrCodeService.decodeQRCode(uploadedImage);
         return qrCodeData;
     }
-
-
 
 
     @GetMapping("/reservation/{reservationId}")

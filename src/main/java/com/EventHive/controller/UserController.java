@@ -36,6 +36,7 @@ public class UserController {
                         .firstName(user.getFirstName())
                         .lastName(user.getLastName())
                         .role(user.getRole())
+                        .wallet(user.getWallet())
                         .username(user.getUsername())
                         .id(user.getId())
                         .build())
