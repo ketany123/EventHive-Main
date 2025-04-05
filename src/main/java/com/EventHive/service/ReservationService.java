@@ -6,6 +6,7 @@ import com.EventHive.dto.UserResponseDto;
 import com.EventHive.entity.Reservation;
 import com.EventHive.entity.Seat;
 import com.EventHive.entity.User;
+import com.EventHive.entity.Wallet;
 import com.EventHive.enums.ReservationStatus;
 import com.EventHive.enums.SeatStatus;
 import com.EventHive.exception.*;
@@ -66,10 +67,19 @@ public class ReservationService {
 
                     // Calculate the amount to be paid.
                     Double amountToBePaid = seats.stream().map(Seat::getPrice).reduce(0.0, Double::sum);
+                    Optional<User> byUsername = userRepository.findByUsername(currentUserName);
+                    User user1=byUsername.get();
+                    Wallet wallet=user1.getWallet();
+                    int amount= wallet.getAmount();
+                    int amountPaid= (amountToBePaid.intValue());
 
-                    if(reservationRequestDto.getAmount() != amountToBePaid)
+                    if(amount < amountPaid)
                         throw new AmountNotMatchException(AMOUNT_NOT_MATCH, HttpStatus.BAD_REQUEST);
 
+
+                    amount -=  amountPaid;
+                    wallet.setAmount(amount);
+                    userRepository.save(user1);
                     // Acquire the lock for all seats
                     seats.forEach(seat -> {
                         ReentrantLock seatLock = seatLockManager.getLockForSeat(seat.getId());
@@ -104,7 +114,6 @@ public class ReservationService {
                             .seatsReserved(bookedSeats)
                             .show(show)
                             .user(user)
-                            .amountPaid(reservationRequestDto.getAmount())
                             .createdAt(LocalDateTime.now())
                             .build();
 
