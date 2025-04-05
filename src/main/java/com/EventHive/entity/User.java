@@ -39,6 +39,9 @@ public class User implements UserDetails {
     private String lastName;
     private String username;
     private String email;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "wallet_id")
+    private Wallet wallet;
 
     @Enumerated(value = EnumType.STRING)
     private Role role;
