@@ -1,5 +1,6 @@
 package com.EventHive.dto;
 
+import com.EventHive.entity.Wallet;
 import com.EventHive.enums.Role;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +16,5 @@ public class UserResponseDto {
     private String email;
     private Role role;
 
-
+    private Wallet wallet;
 }

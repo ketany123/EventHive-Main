@@ -14,6 +14,6 @@ public class ReservationRequestDto {
     private Long id;
     private long showId;
     private List<Long> seatIdsToReserve;
-    private double amount;
+
 
 }
